@@ -11,11 +11,13 @@ import { CardActionArea } from "@mui/material";
 //
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import Loader from "./Loader";
 function App() {
   // const [title, setTitle] = useState('');
   //  const [body, setBody] = useState('');
   const [news, setNews] = useState([]);
   const [category, setCategory] = useState("top");
+  const [loading, setLoading] = useState(false);
   const feild = [
     "business",
     "education",
@@ -29,21 +31,25 @@ function App() {
   ];
 
   const getNews = async () => {
-    const api = `https://newsdata.io/api/1/news?apikey=pub_40776da4d9a5d24ae3ee3e5ecdf6b1d101293&language=en&country=in&category=${category}`;
-    // const data = await fetch(
-    //   "https://newsapi.org/v2/top-headlines?country=in&from=2024-02-26&sortBy=publishedAt&apiKey=d5f7b3ce225348c589cfed774acc91b5"
-    // );
-    // const data = await fetch(
-    //   'https://saurav.tech/NewsAPI/top-headlines/category/health/in.json'
-    // );
-    const data = await fetch(api);
-    // https://newsdata.io/api/1/archive?apikey=pub_40776da4d9a5d24ae3ee3e5ecdf6b1d101293&q=example&language=en&from_date=2023-01-19&to_date=2023-01-25
-    const obj = await data.json();
-    console.log("json");
-    console.log(obj.results);
-    setNews(obj.results);
+    setLoading(true);
+    try {
+      const api = `https://newsdata.io/api/1/news?apikey=pub_40776da4d9a5d24ae3ee3e5ecdf6b1d101293&language=en&country=in&category=${category}`;
+      // const data = await fetch(
+      //   "https://newsapi.org/v2/top-headlines?country=in&from=2024-02-26&sortBy=publishedAt&apiKey=d5f7b3ce225348c589cfed774acc91b5"
+      // );
+      // const data = await fetch(
+      //   'https://saurav.tech/NewsAPI/top-headlines/category/health/in.json'
+      // );
+      const data = await fetch(api);
+      // https://newsdata.io/api/1/archive?apikey=pub_40776da4d9a5d24ae3ee3e5ecdf6b1d101293&q=example&language=en&from_date=2023-01-19&to_date=2023-01-25
+      const obj = await data.json();
+      console.log("json");
+      console.log(obj.results);
+      setNews(obj.results);
 
-    console.log(news);
+      console.log(news);
+    } catch (error) {}
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -76,41 +82,41 @@ function App() {
             />
           </Stack>
         ))}
-
-        
       </div>
       <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-wrap  justify-center">
-          {news.map((news) => (
-            <Card sx={{ maxWidth: 345 }} className="m-2">
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  // height="140"
-                  image={news.image_url}
-                  // alt="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {news.title}
-                  </Typography>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {news.category}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {news.description}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    className=" pt-2"
-                  >
-                    {news.link}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          ))}
+        <div className="flex flex-wrap justify-center">
+          {loading ? (
+            <Loader />
+          ) : (
+            news.map((newsItem, index) => ( // Render news cards if loading is false
+              <Card sx={{ maxWidth: 345 }} className="m-2" key={index}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    image={newsItem.image_url}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {newsItem.title}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {newsItem.category}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {newsItem.description}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      className="pt-2"
+                    >
+                      {newsItem.link}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>
