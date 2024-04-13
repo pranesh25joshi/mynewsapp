@@ -1,10 +1,10 @@
 import React from "react";
 import "./loader.css";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const Loader = () => {
-  <div className="loader-container">
-    <div className="loader"></div>
-  </div>;
+  <CircularProgress />
 };
 
 export default Loader;

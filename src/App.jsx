@@ -6,12 +6,14 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
+
 //
 // import ClickableChips from "./ClickableChips";
 //
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 function App() {
   // const [title, setTitle] = useState('');
   //  const [body, setBody] = useState('');
@@ -41,13 +43,16 @@ function App() {
       //   'https://saurav.tech/NewsAPI/top-headlines/category/health/in.json'
       // );
       const data = await fetch(api);
+      // if(data){
+      //   setLoading(false)
+      // }
       // https://newsdata.io/api/1/archive?apikey=pub_40776da4d9a5d24ae3ee3e5ecdf6b1d101293&q=example&language=en&from_date=2023-01-19&to_date=2023-01-25
       const obj = await data.json();
       console.log("json");
       console.log(obj.results);
       setNews(obj.results);
 
-      console.log(news);
+      console.log(data);
     } catch (error) {}
     setLoading(false);
   };
@@ -86,7 +91,7 @@ function App() {
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-wrap justify-center">
           {loading ? (
-            <Loader />
+              <CircularProgress style={{color:"white"}}/>
           ) : (
             news.map((newsItem, index) => ( // Render news cards if loading is false
               <Card sx={{ maxWidth: 345 }} className="m-2" key={index}>
